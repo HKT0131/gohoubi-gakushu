@@ -1,0 +1,16 @@
+{
+  "name": "vrm-tools",
+  "private": true,
+  "type": "module",
+  "description": "3D版キャラ（VRM）の加工・ライブラリのバンドル用ツール。アプリには同梱されない（iOS はトップレベルの html/js/css と assets/ のみ同梱）。",
+  "scripts": {
+    "build-lib": "node build_lib.mjs",
+    "build-vrm": "node build_vrm.mjs"
+  },
+  "dependencies": {
+    "@pixiv/three-vrm": "3.5.5",
+    "esbuild": "^0.25.0",
+    "pngjs": "^7.0.0",
+    "three": "0.169.0"
+  }
+}

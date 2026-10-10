@@ -1,0 +1,57 @@
+<!doctype html><html><head><meta charset="utf-8"><base href="../../">
+<!-- 肌色の揃い具合（首・あご下と、鎖骨・胸元・腕・お腹の ΔE）を実レンダリングで測る。tools/vrm/measure_skin.mjs から使う -->
+<style>body{margin:0;background:#000}.box{position:absolute;left:0;top:0}.vrm-canvas{position:absolute;inset:0}.vrm-canvas canvas{width:100%;height:100%;display:block}</style></head>
+<body><script src="character_vrm.js"></script><script>
+function lab(r, g, b) {
+  const f = (c) => { c /= 255; return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; };
+  const R = f(r), G = f(g), B = f(b);
+  let X = (0.4124 * R + 0.3576 * G + 0.1805 * B) / 0.95047, Y = 0.2126 * R + 0.7152 * G + 0.0722 * B, Z = (0.0193 * R + 0.1192 * G + 0.9505 * B) / 1.08883;
+  const h = (t) => (t > 0.008856 ? Math.cbrt(t) : 7.787 * t + 16 / 116);
+  X = h(X); Y = h(Y); Z = h(Z);
+  return [116 * Y - 16, 500 * (X - Y), 200 * (Y - Z)];
+}
+window.measure = async (cfg) => {
+  const box = document.createElement("div"); box.className = "box"; box.style.width = "500px"; box.style.height = "500px"; document.body.appendChild(box);
+  const v = CharacterVRM.mount(box, { colors: {}, modelUrl: cfg.model });
+  v.setStage(4); await v.ready; await new Promise((r) => setTimeout(r, 1000));
+  const { vrm, camera, scene, renderer } = v._dbg(); const L = window.VRMLib;
+  const pts = { body: [], face: [] };
+  vrm.scene.traverse((o) => { if (!o.isMesh) return; const n = [].concat(o.material).map((m) => m.name).join(); const k = /Body_00_SKIN/.test(n) ? "body" : /Face_00_SKIN/.test(n) ? "face" : null; if (!k) return;
+    const p = o.geometry.attributes.position, nm = o.geometry.attributes.normal, used = new Uint8Array(p.count); for (const i of o.geometry.index.array) used[i] = 1;
+    for (let i = 0; i < p.count; i++) if (used[i]) { const w = new L.Vector3(p.getX(i), p.getY(i), p.getZ(i)).applyMatrix4(o.matrixWorld); const nn = new L.Vector3(nm.getX(i), nm.getY(i), nm.getZ(i)).transformDirection(o.matrixWorld); if (nn.z > 0.6) pts[k].push(w); } });
+  const R = {
+    jaw: ["face", (p) => p.y < 1.49 && Math.abs(p.x) < 0.03],
+    neck: ["body", (p) => p.y > 1.445 && p.y < 1.48 && Math.abs(p.x) < 0.03],
+    lowneck: ["body", (p) => p.y > 1.412 && p.y < 1.428 && Math.abs(p.x) < 0.04],
+    collar: ["body", (p) => p.y > 1.38 && p.y < 1.42 && Math.abs(p.x) > 0.03 && Math.abs(p.x) < 0.08],
+    chest: ["body", (p) => p.y > 1.3 && p.y < 1.36 && Math.abs(p.x) < 0.012],
+    belly: ["body", (p) => p.y > 1.05 && p.y < 1.14 && Math.abs(p.x) < 0.05],
+    shoulder: ["body", (p) => p.y > 1.36 && p.y < 1.42 && Math.abs(p.x) > 0.11 && Math.abs(p.x) < 0.16],
+  };
+  camera.position.set(0, 1.3, 1.5); camera.fov = 22; camera.lookAt(0, 1.3, 0); camera.updateProjectionMatrix();
+  renderer.render(scene, camera);
+  const cv = document.createElement("canvas"); cv.width = renderer.domElement.width; cv.height = renderer.domElement.height; const cx = cv.getContext("2d"); cx.drawImage(renderer.domElement, 0, 0);
+  const W = cv.width, H = cv.height, img = cx.getImageData(0, 0, W, H).data; const res = {};
+  for (const [name, [k, f]] of Object.entries(R)) {
+    const acc = [0, 0, 0]; let n = 0;
+    for (const p of pts[k].filter(f)) { const q = p.clone().project(camera); const x = Math.round((q.x + 1) / 2 * W), y = Math.round((1 - q.y) / 2 * H); if (x < 1 || y < 1 || x >= W - 1 || y >= H - 1) continue; const o = (y * W + x) * 4; if (img[o + 3] < 250) continue;
+      const r = img[o], g = img[o + 1], b = img[o + 2]; if (g / r < 0.7) continue; // 水着の画素は除く
+      const l = lab(r, g, b); for (let c = 0; c < 3; c++) acc[c] += l[c]; n++; }
+    res[name] = { n, lab: acc.map((v) => +(v / Math.max(1, n)).toFixed(1)) };
+  }
+  const d = (a, b) => +Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]).toFixed(1);
+  const ref = res.neck.lab;
+  for (const k of Object.keys(res)) if (res[k].lab) res[k].dE_vs_neck = d(res[k].lab, ref), res[k].dE_vs_jaw = d(res[k].lab, res.jaw.lab);
+  // 鎖骨をまたぐ 1cm 刻みの帯（前面 |x|<0.05）の平均と、隣り合う帯の ΔE
+  const bands = [];
+  for (let y = 1.34; y < 1.43; y += 0.01) {
+    const acc = [0, 0, 0]; let n = 0;
+    for (const p of pts.body) { if (p.y < y || p.y >= y + 0.01 || Math.abs(p.x) > 0.05) continue; const q = p.clone().project(camera); const x = Math.round((q.x + 1) / 2 * W), yy = Math.round((1 - q.y) / 2 * H); for (let dy = -3; dy <= 3; dy++) for (let dx = -3; dx <= 3; dx++) { const o = ((yy + dy) * W + x + dx) * 4; if (img[o + 3] < 250) continue; const r = img[o], g = img[o + 1], b = img[o + 2]; if (g / r < 0.7 || r < 150) continue; const l = lab(r, g, b); for (let c = 0; c < 3; c++) acc[c] += l[c]; n++; } }
+    bands.push({ y: +y.toFixed(2), n, lab: acc.map((v) => v / Math.max(1, n)) });
+  }
+  res.bands = bands.map((b, i) => ({ y: b.y, n: b.n, L: +b.lab[0].toFixed(1), dE_next: i + 1 < bands.length && b.n && bands[i + 1].n ? d(b.lab, bands[i + 1].lab) : null }));
+  const png = cv.toDataURL();
+  v.dispose(); box.remove();
+  return { res, png };
+};
+</script></body></html>

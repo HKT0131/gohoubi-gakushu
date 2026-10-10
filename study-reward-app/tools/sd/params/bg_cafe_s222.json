@@ -1,0 +1,12 @@
+{
+ "name": "cafe",
+ "seed": 222,
+ "prompt": "cozy cafe interior, wooden counter and small tables, coffee cups, pendant lights, plants, large window with street view, soft afternoon light, relaxed atmosphere, no humans, scenery, indoors, vertical composition, eye level, soft focus, depth of field, anime background art, warm off-white and indigo color palette, subtle vermilion accents, detailed background, newest, masterpiece, high score, great score, absurdres",
+ "negative": "1girl, 1boy, people, person, character, humanoid, text, watermark, signature, logo, lowres, blurry foreground objects, distorted perspective, fisheye, worst quality, low quality, low score, bad score, average score, bed sheets mess, stuffed toy, school desk, randoseru, nsfw",
+ "size": [
+  768,
+  1344
+ ],
+ "hires": 1.5,
+ "hires_strength": 0.4
+}

@@ -1,0 +1,44 @@
+{
+  "_comment": "音声生成の設定。話者は利用規約で『性的表現OK・商用OK・他キャラへの声当てOK』が明記された波音リツのみ採用（README参照）。数値を変えると該当行だけ再生成される。",
+  "engine": "http://127.0.0.1:50021",
+  "credits": ["VOICEVOX:波音リツ"],
+  "speaker": "波音リツ",
+  "_toneComment": "全性格共通の声のトーン補正（2026-10 ユーザー選択: 候補A＝やや高めのアニメ声寄り）。pitch は足し算、他は掛け算。",
+  "tone": { "pitchAdd": 0.06, "intonationMul": 1.1, "speedMul": 1.03 },
+  "personalities": {
+    "gentle":   { "style": "ノーマル", "speedScale": 0.95, "pitchScale": 0.0,   "intonationScale": 1.10, "volumeScale": 1.0, "prePhonemeLength": 0.08, "postPhonemeLength": 0.12 },
+    "tsundere": { "style": "ノーマル", "speedScale": 1.08, "pitchScale": 0.03,  "intonationScale": 1.35, "volumeScale": 1.0, "prePhonemeLength": 0.05, "postPhonemeLength": 0.10 },
+    "cool":     { "style": "クイーン", "speedScale": 1.00, "pitchScale": -0.02, "intonationScale": 0.85, "volumeScale": 1.0, "prePhonemeLength": 0.08, "postPhonemeLength": 0.12 },
+    "genki":    { "style": "ノーマル", "speedScale": 1.12, "pitchScale": 0.05,  "intonationScale": 1.45, "volumeScale": 1.0, "prePhonemeLength": 0.04, "postPhonemeLength": 0.10 }
+  },
+  "_exprComment": "expr ごとの補正。speed/intonation/volume は掛け算、pitch は足し算。style を指定するとその表情だけスタイルを差し替える。",
+  "expr": {
+    "normal": {},
+    "happy":  { "speedScale": 1.03, "pitchScale": 0.02,  "intonationScale": 1.15 },
+    "shy":    { "speedScale": 0.93, "pitchScale": 0.01,  "intonationScale": 0.90, "volumeScale": 0.92, "prePhonemeLength": 0.15 },
+    "sad":    { "speedScale": 0.92, "pitchScale": -0.03, "intonationScale": 0.80, "volumeScale": 0.95 },
+    "pout":   { "speedScale": 1.02, "pitchScale": 0.01,  "intonationScale": 1.20 }
+  },
+  "_dictComment": "ユーザー辞書（エンジンに登録）。pronunciation はカタカナ、accent は音が下がる直前のモーラ位置（0=平板）。",
+  "dictionary": [
+    { "surface": "学び直し",     "pronunciation": "マナビナオシ",       "accent": 3 },
+    { "surface": "簿記",         "pronunciation": "ボキ",               "accent": 1 },
+    { "surface": "ITパスポート", "pronunciation": "アイティーパスポート", "accent": 6 },
+    { "surface": "TOEIC",        "pronunciation": "トーイック",         "accent": 3 },
+    { "surface": "FP",           "pronunciation": "エフピー",           "accent": 3 },
+    { "surface": "宅建",         "pronunciation": "タッケン",           "accent": 0 },
+    { "surface": "復習",         "pronunciation": "フクシュウ",         "accent": 0 },
+    { "surface": "ポモドーロ",   "pronunciation": "ポモドーロ",         "accent": 3 },
+    { "surface": "過去問",       "pronunciation": "カコモン",           "accent": 0 },
+    { "surface": "月水金",       "pronunciation": "ゲツスイキン",       "accent": 0 },
+    { "surface": "火木",         "pronunciation": "カモク",             "accent": 0 },
+    { "surface": "SPI",          "pronunciation": "エスピーアイ",       "accent": 5 }
+  ],
+  "_replaceComment": "辞書で直らない読みの置換（合成前のテキストだけに適用。表示テキストは変わらない）。正規表現。",
+  "replace": [
+    { "from": "〜", "to": "ー" },
+    { "from": "…+", "to": "、" },
+    { "from": "その間", "to": "そのあいだ" },
+    { "from": "黄色", "to": "きいろ" }
+  ]
+}

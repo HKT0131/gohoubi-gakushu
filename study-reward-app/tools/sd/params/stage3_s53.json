@@ -1,0 +1,10 @@
+{
+ "stage": 3,
+ "input": "out/stage2.png",
+ "seed": 53,
+ "prompt": "1girl, solo, safe, (adult woman)1.2, mature female, 25 years old, tall, slender, medium breasts, long legs, dark brown hair, medium hair, straight hair, side-swept bangs, hair behind ear, shiny hair, brown eyes, beautiful detailed eyes, long eyelashes, beautiful face, light blush, small mole under eye, white blouse, collared shirt, long sleeves, (grey pleated skirt)1.2, knee-length skirt, beige flat shoes, smile, closed mouth, looking at viewer, standing, full body, straight-on, facing viewer, arms at sides, simple background, (white background)1.2, game cg, anime coloring, newest, masterpiece, high score, great score, absurdres",
+ "negative": "lowres, bad anatomy, bad hands, text, error, missing finger, extra digits, fewer digits, cropped, worst quality, low quality, low score, bad score, average score, signature, watermark, username, blurry, child, loli, shota, toddler, young child, teenager, aged down, petite body, small body, flat chest, chibi, large head, school uniform, serafuku, randoseru, nsfw, nude, naked, nipples, covered nipples, cleavage, large breasts, huge breasts, lingerie, underwear, bra, panties, see-through, wet clothes, sexually suggestive, seductive pose, spread legs, from below, ass focus, breast focus, bad anatomy, bad hands, extra fingers, missing fingers, extra arms, deformed, blurry, lowres, jpeg artifacts, watermark, signature, text, logo, cropped, out of frame, star-shaped pupils, symbol-shaped pupils, sparkle, grey background, gradient background, pantyhose, black legwear, boots, miniskirt, white headwear, beige skirt, white skirt, long skirt, pencil skirt, miniskirt, high heels, shadow, multiple views, reference sheet, hands in pockets, holding, bag, hand up, crossed arms, blazer, jacket, coat, scarf, hat, vest",
+ "strength": 0.85,
+ "steps": 30,
+ "cfg": 5.0
+}

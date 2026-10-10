@@ -1,0 +1,8 @@
+{
+ "name": "room_evening",
+ "seed": 231,
+ "src": "out/bg/m_eve.png",
+ "strength": 0.6,
+ "prompt": "same small one-room apartment of a working adult, wooden desk with laptop and notebooks, bookshelf, potted plant, desk lamp, orange sunset light through window, sunset, long warm shadows, calm evening, no humans, scenery, indoors, vertical composition, eye level, soft focus, depth of field, anime background art, warm off-white and indigo color palette, subtle vermilion accents, detailed background, newest, masterpiece, high score, great score, absurdres",
+ "negative": "1girl, 1boy, people, person, character, humanoid, text, watermark, signature, logo, lowres, blurry foreground objects, distorted perspective, fisheye, worst quality, low quality, low score, bad score, average score, bed sheets mess, stuffed toy, school desk, randoseru, nsfw"
+}

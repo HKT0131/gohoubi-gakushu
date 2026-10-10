@@ -1,0 +1,193 @@
+{
+ "_note": "app.js の LINES から作った検証用サンプル（{n}→5, {l}→コート に置換）。script.js が無い/壊れているときに --sample で使う。",
+ "lines": {
+  "gentle.home.1": {
+   "text": "今日も一緒に頑張ろうね。",
+   "expr": "normal"
+  },
+  "gentle.home.2": {
+   "text": "5問、集中していこう？",
+   "expr": "normal"
+  },
+  "gentle.correct.1": {
+   "text": "正解！その調子。",
+   "expr": "happy"
+  },
+  "gentle.correct.2": {
+   "text": "すごいね、ちゃんと覚えてる。",
+   "expr": "happy"
+  },
+  "gentle.wrong.1": {
+   "text": "大丈夫、次で取り返そう。",
+   "expr": "sad"
+  },
+  "gentle.wrong.2": {
+   "text": "惜しい！あとで復習しようね。",
+   "expr": "sad"
+  },
+  "gentle.pass.1": {
+   "text": "合格おめでとう。…約束だから、コートを脱ぐね。",
+   "expr": "shy"
+  },
+  "gentle.pass.2": {
+   "text": "よく頑張ったね。コート、脱いじゃうね。",
+   "expr": "shy"
+  },
+  "gentle.fail.1": {
+   "text": "今回は残念…もう一回いこう？",
+   "expr": "sad"
+  },
+  "gentle.fail.2": {
+   "text": "合格ラインまであと少しだったよ。",
+   "expr": "sad"
+  },
+  "gentle.complete.1": {
+   "text": "全部クリア…！本当によく頑張ったね。",
+   "expr": "happy"
+  },
+  "gentle.complete.2": {
+   "text": "最後まで付き合ってくれてありがとう。",
+   "expr": "happy"
+  },
+  "gentle.away.1": {
+   "text": "よそ見しちゃダメだよ？",
+   "expr": "pout"
+  },
+  "tsundere.home.1": {
+   "text": "べ、別にあなたの勉強なんて気にしてないんだからね。",
+   "expr": "normal"
+  },
+  "tsundere.home.2": {
+   "text": "さっさと始めなさいよ。",
+   "expr": "normal"
+  },
+  "tsundere.correct.1": {
+   "text": "ふん、これくらい当然でしょ。",
+   "expr": "happy"
+  },
+  "tsundere.correct.2": {
+   "text": "…やるじゃない。",
+   "expr": "happy"
+  },
+  "tsundere.wrong.1": {
+   "text": "ちょっと！ちゃんと考えなさいよ！",
+   "expr": "sad"
+  },
+  "tsundere.wrong.2": {
+   "text": "はぁ…覚えてなかったの？",
+   "expr": "sad"
+  },
+  "tsundere.pass.1": {
+   "text": "…約束は約束だから。コート、脱ぐけど見すぎないでよね！",
+   "expr": "shy"
+  },
+  "tsundere.pass.2": {
+   "text": "し、仕方ないわね…コートだけよ！",
+   "expr": "shy"
+  },
+  "tsundere.fail.1": {
+   "text": "その程度じゃ脱いであげないわよ。",
+   "expr": "sad"
+  },
+  "tsundere.fail.2": {
+   "text": "出直してきなさい。",
+   "expr": "sad"
+  },
+  "tsundere.complete.1": {
+   "text": "…ここまで来るなんて、ちょっとだけ見直したわ。",
+   "expr": "happy"
+  },
+  "tsundere.away.1": {
+   "text": "どこ見てるのよ！集中しなさい！",
+   "expr": "pout"
+  },
+  "cool.home.1": {
+   "text": "始めましょう。時間は有限です。",
+   "expr": "normal"
+  },
+  "cool.home.2": {
+   "text": "準備はいいですか。",
+   "expr": "normal"
+  },
+  "cool.correct.1": {
+   "text": "正解です。",
+   "expr": "happy"
+  },
+  "cool.correct.2": {
+   "text": "問題ありません。",
+   "expr": "happy"
+  },
+  "cool.wrong.1": {
+   "text": "不正解。記録しておきます。",
+   "expr": "sad"
+  },
+  "cool.wrong.2": {
+   "text": "復習対象に追加しました。",
+   "expr": "sad"
+  },
+  "cool.pass.1": {
+   "text": "基準を満たしました。コートを外します。",
+   "expr": "shy"
+  },
+  "cool.pass.2": {
+   "text": "合格です。…コート、どうぞ。",
+   "expr": "shy"
+  },
+  "cool.fail.1": {
+   "text": "基準未達です。再挑戦を推奨します。",
+   "expr": "sad"
+  },
+  "cool.complete.1": {
+   "text": "全工程完了。あなたの努力は数字が証明しています。",
+   "expr": "happy"
+  },
+  "cool.away.1": {
+   "text": "集中力が途切れていますよ。",
+   "expr": "pout"
+  },
+  "genki.home.1": {
+   "text": "よーし、今日もいっくよー！",
+   "expr": "normal"
+  },
+  "genki.home.2": {
+   "text": "がんばろー！おー！",
+   "expr": "normal"
+  },
+  "genki.correct.1": {
+   "text": "やったー！正解！",
+   "expr": "happy"
+  },
+  "genki.correct.2": {
+   "text": "天才じゃん！",
+   "expr": "happy"
+  },
+  "genki.wrong.1": {
+   "text": "ドンマイドンマイ！",
+   "expr": "sad"
+  },
+  "genki.wrong.2": {
+   "text": "あちゃー、次いこ次！",
+   "expr": "sad"
+  },
+  "genki.pass.1": {
+   "text": "合格〜！じゃあコート、ぽいっ！",
+   "expr": "shy"
+  },
+  "genki.pass.2": {
+   "text": "すごいすごい！コート脱いじゃう！",
+   "expr": "shy"
+  },
+  "genki.fail.1": {
+   "text": "くやしー！もう一回やろ！",
+   "expr": "sad"
+  },
+  "genki.complete.1": {
+   "text": "全部クリアだー！最高のパートナーだよ！",
+   "expr": "happy"
+  },
+  "genki.away.1": {
+   "text": "あれ？どこ行ってたの〜？",
+   "expr": "pout"
+  }
+ }
+}

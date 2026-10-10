@@ -1,0 +1,6 @@
+.DS_Store
+node_modules/
+ios/build/
+xcuserdata/
+study-reward-app/tools/vrm/out/
+*.log

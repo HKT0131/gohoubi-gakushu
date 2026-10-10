@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BGM確認</title>
+<style>
+:root{--bg:#fff7fb;--fg:#3a2b33;--card:#fff;--acc:#e0559a;--line:#f0d4e2}
+@media (prefers-color-scheme: dark){:root{--bg:#1d1519;--fg:#f4e8ee;--card:#2a2026;--acc:#ff7fbd;--line:#4a3540}}
+body{margin:0;padding:16px;font:15px/1.5 -apple-system,"Hiragino Sans",sans-serif;background:var(--bg);color:var(--fg)}
+h1{font-size:20px;margin:0 0 12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+button{font:inherit;padding:12px 10px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--fg);cursor:pointer;text-align:left}
+button.on{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc) inset}
+button small{display:block;opacity:.65;font-size:12px}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:14px 0}
+#log{white-space:pre-wrap;font:12px/1.4 ui-monospace,monospace;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px;min-height:60px}
+</style></head><body>
+<h1>BGM 確認ページ</h1>
+<div class="row">
+  <label><input type="checkbox" id="synth"> 合成音源を強制（ファイルを使わない）</label>
+  <label><input type="checkbox" id="en" checked> BGM ON</label>
+  <label>音量 <input type="range" id="vol" min="0" max="1" step="0.05"></label>
+  <button id="duck">ダッキング（ボイス中）</button>
+  <button id="stop">停止</button>
+</div>
+<div class="grid" id="tracks"></div>
+<p>再生中: <b id="now">-</b> / 音源: <b id="src">-</b></p>
+<div id="log"></div>
+<script src="/Users/hkt/bizdev/study-reward-app/bgm.js"></script>
+<script>
+const ASSETS = "file:///Users/hkt/bizdev/study-reward-app/assets/bgm/";
+const INFO = { title:"タイトル", home:"ホーム", study:"学習中", study_hurry:"残り10秒", result_win:"合格", result_lose:"不合格", event:"会話イベント" };
+const $ = (id) => document.getElementById(id);
+function log(s){ $("log").textContent = s + "\n" + $("log").textContent; }
+for (const t of GameBGM.tracks) {
+  const d = GameBGM._songs[t], b = document.createElement("button");
+  b.dataset.t = t;
+  b.innerHTML = `${INFO[t]}<small>${t} · ${d.key} ${d.mode === "major" ? "メジャー" : "マイナー"} · ${d.bpm}BPM · ${d.form.length}小節</small>`;
+  b.onclick = () => { GameBGM.unlock(); GameBGM.play(t); refresh(); };
+  $("tracks").appendChild(b);
+}
+function setBase(){ GameBGM.base = $("synth").checked ? "file:///nonexistent/" : ASSETS; }
+setBase();
+$("synth").onchange = () => { location.hash = $("synth").checked ? "synth" : ""; location.reload(); };
+if (location.hash === "#synth") { $("synth").checked = true; setBase(); }
+$("vol").value = GameBGM.getVolume(); $("en").checked = GameBGM.isEnabled();
+$("vol").oninput = (e) => GameBGM.setVolume(+e.target.value);
+$("en").onchange = (e) => { GameBGM.unlock(); GameBGM.setEnabled(e.target.checked); };
+let ducked = false;
+$("duck").onclick = () => { ducked = !ducked; GameBGM.duck(ducked); $("duck").classList.toggle("on", ducked); };
+$("stop").onclick = () => { GameBGM.stop(); refresh(); };
+document.addEventListener("pointerdown", () => GameBGM.unlock(), { passive: true });
+function refresh(){
+  const t = GameBGM.current();
+  $("now").textContent = t ? INFO[t] + " (" + t + ")" : "-";
+  $("src").textContent = t ? ({buffer:"ファイル（AudioBuffer）", element:"ファイル（<audio>）", none:"合成"}[GameBGM._sourceOf(t)] || "判定中…") : "-";
+  document.querySelectorAll("#tracks button").forEach(b => b.classList.toggle("on", b.dataset.t === t));
+}
+setInterval(refresh, 300);
+</script>
+</body></html>

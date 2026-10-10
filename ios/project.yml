@@ -1,0 +1,38 @@
+name: StudyReward
+options:
+  bundleIdPrefix: com.hkt
+  deploymentTarget:
+    iOS: "16.0"
+targets:
+  StudyReward:
+    type: application
+    platform: iOS
+    sources:
+      - path: StudyReward
+        excludes:
+          - "Vendor/**"
+    settings:
+      base:
+        DEVELOPMENT_TEAM: MLQTD566ZA
+        CODE_SIGN_STYLE: Automatic
+        PRODUCT_BUNDLE_IDENTIFIER: com.hkt.studyreward
+        MARKETING_VERSION: "0.1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: ごほうび学習
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait
+        INFOPLIST_KEY_UIStatusBarStyle: UIStatusBarStyleDefault
+        TARGETED_DEVICE_FAMILY: "1,2"
+        ENABLE_USER_SCRIPT_SANDBOXING: NO
+        SWIFT_VERSION: "5.0"
+    preBuildScripts:
+      - name: Copy web app
+        basedOnDependencyAnalysis: false
+        script: |
+          set -e
+          SRC="${PROJECT_DIR}/../study-reward-app"
+          DST="${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Web"
+          rm -rf "$DST" && mkdir -p "$DST"
+          find "$SRC" -maxdepth 1 -type f \( -name '*.html' -o -name '*.js' -o -name '*.css' \) -exec cp {} "$DST/" \;
+          if [ -d "$SRC/assets" ]; then rsync -a --exclude '.*' "$SRC/assets" "$DST/"; fi

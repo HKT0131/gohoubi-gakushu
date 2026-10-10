@@ -1,0 +1,24 @@
+{
+ "model": "cagliostrolab/animagine-xl-4.0 (CreativeML Open RAIL++-M), diffusers 0.41, bf16, Euler a, compel long-prompt",
+ "host": "DGX Spark (GB10) ~/sdgen, venv ~/venvs/sdgen (torch 2.14.1+cu130)",
+ "candidates": {
+  "v1 seeds 1001-1024 (cfg5)": 24,
+  "v2 seeds 2001-2016 (cfg6, weighted clothes)": 16,
+  "v3 seeds 3001-3016 (cfg5, final prompt)": 16,
+  "stage4 cn4 seeds 81-86": 6,
+  "expressions (st0+st1 16 each, happy +14)": 46,
+  "backgrounds (morning 6, library 4, cafe 4, evening 4+3, night 4+3)": 28
+ },
+ "base": "v3 seed 3014 -> step2_hires.py (x1.5 img2img 0.35, face crop inpaint 0.35)",
+ "chain": [
+  "stage1: stages.py 1 out/s0_base.png seed 21 (beret/scarf mask, navy prefill->bg, strength 0.95)",
+  "stage2: stages.py 2 out/stage1.png seed 44 (coat area, bg/navy/skirt/skin prefill, strength 0.9) -> fix_beige.py 450,385,575,445 715,385,820,445 -> touchup.py 2 ... 450,370,820,440 0.5 seed45 -> rowfix.py 470,830 1374,1396 -> softfix.py 2 ... 460,1290,840,1580 0.4 seed44",
+  "stage3: stages.py 3 out/stage2(b).png seed 53 (navy blazer pixels mask, strength 0.85) -> touchup.py 3 ... 540,372,740,440 0.5 seed53 -> legs rows>=1000 copied from fixed stage2",
+  "post.py: rembg isnet-anime, largest component, alpha<0.06 cut, 1px erode, edge color defringe, shared transform from stage0 (transform.json)",
+  "skirt color: skirtfix.py (per-channel gain on beige skirt pixels of stage2/3 to match stage0)",
+  "stage4 (bikini, cute design): cn4.py out/stage3.png seed 84 cn_scale 0.8 strength 0.95 with ControlNet OpenPose xinsir/controlnet-openpose-sdxl-1.0 (Apache-2.0, hand-drawn keypoints matching stage0-3 arms) -> paint_hair.py 575,356,715,400 -> touchup.py 4 570,352,720,410 0.68 s64 -> rowfix.py 470,830 1376,1394 -> softfix.py 4 470,1200,830,1700 0.6 s84",
+  "expressions: expr.py on stage1 (face ellipse 563,222,717,354, crop 450,90,830,470): happy s105 0.75, shy s104 0.58, sad s104 0.58, pout s103 0.62 -> compose_expr.py pastes the face onto all 5 stages (face region identical across stages)",
+  "backgrounds: bg.py t2i 768x1344 + hires x1.5 0.4: room_morning s202, library s214, cafe s222; room_evening = grade.py(1.05,0.78,0.55,g1.15)+i2i 0.6 s231; room_night = grade.py(0.35,0.38,0.6,g1.6)+i2i 0.62 s241; bg.py final -> 1170x2532 JPEG q84",
+  "post.py: horizontal placement now uses the head center (rows 3-8% below the top)"
+ ]
+}

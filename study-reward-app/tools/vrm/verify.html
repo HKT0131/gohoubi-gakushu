@@ -1,0 +1,53 @@
+<!doctype html><html><head><meta charset="utf-8"><base href="../../">
+<!-- 実レンダリングでの被覆検査（tools/vrm/verify_render.mjs から使う）。アプリには同梱しない -->
+<style>body{margin:0;background:#000}.box{position:absolute;left:0;top:0}.vrm-canvas{position:absolute;inset:0}.vrm-canvas canvas{width:100%;height:100%;display:block}</style></head>
+<body><script src="character_vrm.js"></script><script>
+// 肌色（ライティング込み）の判定。白（水玉・縁取り）と水着色は含まない。
+function isSkin(r, g, b) { if (r < 140) return false; const gr = g / r, br = b / r; return gr > 0.7 && gr < 0.96 && br > 0.55 && br < 0.93; }
+window.runCheck = async (cfg) => {
+  const box = document.createElement("div"); box.className = "box"; box.style.width = cfg.w + "px"; box.style.height = cfg.h + "px"; document.body.appendChild(box);
+  const v = CharacterVRM.mount(box, { colors: { swim: cfg.swim }, modelUrl: cfg.model });
+  v.setStage(cfg.stage);
+  await v.ready;
+  await new Promise((r) => setTimeout(r, 1200)); // フェード・揺れものが落ち着くまで
+  const { vrm, camera, scene, renderer } = v._dbg();
+  const L = window.VRMLib;
+  // 体の頂点（バインド姿勢・ワールド座標、+Z が正面）
+  const pts = [];
+  vrm.scene.traverse((o) => { if (!o.isMesh || !/Body_00_SKIN/.test([].concat(o.material).map((m) => m.name).join())) return;
+    const p = o.geometry.attributes.position, used = new Uint8Array(p.count); for (const i of o.geometry.index.array) used[i] = 1;
+    for (let i = 0; i < p.count; i++) if (used[i]) pts.push(new L.Vector3(p.getX(i), p.getY(i), p.getZ(i)).applyMatrix4(o.matrixWorld)); });
+  const results = [];
+  for (const view of cfg.views) {
+    camera.position.set(...view.pos); camera.fov = view.fov; camera.lookAt(...view.at); camera.updateProjectionMatrix();
+    renderer.render(scene, camera);
+    const cv = document.createElement("canvas"); cv.width = renderer.domElement.width; cv.height = renderer.domElement.height;
+    const cx = cv.getContext("2d"); cx.drawImage(renderer.domElement, 0, 0);
+    const W = cv.width, H = cv.height, img = cx.getImageData(0, 0, W, H).data;
+    const out = { view: view.name, rects: [] };
+    for (const rc of view.rects) {
+      // 領域の頂点（正面 or 背面側）を画面に投影し、外接矩形を 15%（rc.shrink）内側に縮めて数える
+      const sel = pts.filter((p) => (rc.cx ? p.x * rc.sign > 0 && Math.abs(Math.abs(p.x) - rc.cx) < rc.x : Math.abs(p.x) < rc.x) && p.y > rc.y0 && p.y < rc.y1 && (rc.side === "front" ? p.z > -0.01 : p.z < -0.01));
+      if (!sel.length) { out.rects.push({ name: rc.name, error: "no points" }); continue; }
+      let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+      for (const p of sel) { const q = p.clone().project(camera); const sx = (q.x + 1) / 2 * W, sy = (1 - q.y) / 2 * H; x0 = Math.min(x0, sx); x1 = Math.max(x1, sx); y0 = Math.min(y0, sy); y1 = Math.max(y1, sy); }
+      const sk = rc.shrink || 0.15, sw = (x1 - x0) * sk, sh = (y1 - y0) * sk; x0 += sw; x1 -= sw; y0 += sh; y1 -= sh;
+      let n = 0, skin = 0; const marks = [];
+      for (let y = Math.max(0, y0 | 0); y < Math.min(H, Math.ceil(y1)); y++) for (let x = Math.max(0, x0 | 0); x < Math.min(W, Math.ceil(x1)); x++) {
+        const o = (y * W + x) * 4; if (img[o + 3] < 250) continue;
+        // 輪郭のアンチエイリアス（背景＝透明と混ざった画素）は除く: 2px 以内に透明があれば数えない
+        let edge = false; for (let dy = -2; dy <= 2 && !edge; dy++) for (let dx = -2; dx <= 2; dx++) { const yy = y + dy, xx = x + dx; if (yy < 0 || xx < 0 || yy >= H || xx >= W || img[(yy * W + xx) * 4 + 3] < 250) { edge = true; break; } }
+        if (edge) continue;
+        n++; if (isSkin(img[o], img[o + 1], img[o + 2])) { skin++; marks.push([x, y]); }
+      }
+      out.rects.push({ name: rc.name, px: n, skin, box: [x0, y0, x1, y1].map(Math.round), expect: rc.expect || "none" });
+      if (rc.expect !== "skin") { cx.fillStyle = "#00ff00"; for (const [mx, my] of marks) cx.fillRect(mx - 2, my - 2, 5, 5); }
+      cx.strokeStyle = rc.expect === "skin" ? "#0f0" : "#f0f"; cx.lineWidth = 1; cx.strokeRect(x0, y0, x1 - x0, y1 - y0);
+    }
+    out.png = cv.toDataURL("image/png");
+    results.push(out);
+  }
+  v.dispose(); box.remove();
+  return results;
+};
+</script></body></html>

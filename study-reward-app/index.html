@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="color-scheme" content="light dark">
+  <title>ごほうび学習</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="mode-home">
+  <!-- 共通の部品（SVG シンボル） -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-heart" viewBox="0 0 32 30"><path d="M16 29 C6 21 1 15.5 1 9.5 C1 4.8 4.6 1 9.2 1 C12.2 1 14.6 2.6 16 5 C17.4 2.6 19.8 1 22.8 1 C27.4 1 31 4.8 31 9.5 C31 15.5 26 21 16 29 Z"/></symbol>
+      <symbol id="i-coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10.5"/><circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".55"/><path d="M9 8.5 L12 12.5 L15 8.5 M12 12.5 V17 M9.2 13.4 H14.8 M9.2 15.4 H14.8" fill="none" stroke="currentColor" stroke-width="1.4" opacity=".7"/></symbol>
+      <symbol id="i-book" viewBox="0 0 28 28"><path d="M4 6 C8 4.5 11 5 14 7 C17 5 20 4.5 24 6 V22 C20 20.5 17 21 14 23 C11 21 8 20.5 4 22 Z M14 7 V23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+      <symbol id="i-talk" viewBox="0 0 28 28"><path d="M5 7 H23 V18 H13 L8 22 V18 H5 Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M14 15.6 C10.5 13.2 9.6 12 9.6 10.8 C9.6 9.8 10.4 9.1 11.4 9.1 C12.6 9.1 13.4 9.9 14 10.8 C14.6 9.9 15.4 9.1 16.6 9.1 C17.6 9.1 18.4 9.8 18.4 10.8 C18.4 12 17.5 13.2 14 15.6 Z" fill="currentColor"/></symbol>
+      <symbol id="i-album" viewBox="0 0 28 28"><rect x="5" y="5" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5 19 L11 13 L16 18 L19 15 L23 19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="18" cy="10" r="1.8" fill="currentColor"/></symbol>
+      <symbol id="i-flag" viewBox="0 0 28 28"><path d="M7 24 V4 M7 5 H21 L18 9.5 L21 14 H7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+      <symbol id="i-gear" viewBox="0 0 28 28"><circle cx="14" cy="14" r="3.6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M14 3.5 V7 M14 21 V24.5 M3.5 14 H7 M21 14 H24.5 M6.6 6.6 L9 9 M19 19 L21.4 21.4 M6.6 21.4 L9 19 M19 9 L21.4 6.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="14" cy="14" r="8" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+      <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" fill="currentColor"/><path d="M8 10.5 V7.5 C8 5.3 9.8 3.5 12 3.5 C14.2 3.5 16 5.3 16 7.5 V10.5" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6 L18 18 M18 6 L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+      <symbol id="i-left" viewBox="0 0 24 24"><path d="M15 5 L8 12 L15 19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></symbol>
+      <symbol id="i-right" viewBox="0 0 24 24"><path d="M9 5 L16 12 L9 19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></symbol>
+      <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 22 C7.5 22 5 19 5 15.5 C5 11.5 8.5 9.5 9 5.5 C11.5 7 12.5 9 12.5 11 C13.5 10 14 8.5 14 7 C17 9 19 12 19 15.5 C19 19 16.5 22 12 22 Z"/></symbol>
+      <symbol id="i-gift" viewBox="0 0 28 28"><rect x="5" y="11" width="18" height="12" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="4" y="8" width="20" height="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M14 8 V23 M14 8 C11 3 7 5 9.5 8 M14 8 C17 3 21 5 18.5 8" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+    </defs>
+  </svg>
+
+  <div id="game" class="game">
+    <!-- 背景（画像 → 無ければ CSS で描いた部屋） -->
+    <div id="bg" class="bg" data-bg="room_evening" aria-hidden="true">
+      <div class="bg-art"><i class="bg-window"></i><i class="bg-shelf"></i><i class="bg-lamp"></i><i class="bg-desk"></i></div>
+      <div class="bg-img"></div>
+      <div class="bg-tint"></div>
+    </div>
+
+    <!-- 立ち絵 -->
+    <div id="scene" class="scene">
+      <div id="stand" class="stand" data-stage="0">
+        <div class="stand-react"><div class="stand-move">
+          <div class="slot on" data-slot="0"></div>
+          <div class="slot" data-slot="1"></div>
+        </div></div>
+        <div class="stand-light" aria-hidden="true"></div>
+      </div>
+      <button id="chara-hit" class="chara-hit" type="button" aria-label="話しかける"></button>
+    </div>
+
+    <!-- 勉強中・結果画面のキャラの吹き出し -->
+    <div id="quiz-bubble" class="bubble hidden" aria-live="polite"><span class="plate" id="quiz-name"></span><p class="msg" id="quiz-msg"></p></div>
+
+    <!-- ===== ホーム（キャラの部屋） ===== -->
+    <section id="home" class="screen" aria-label="ホーム">
+      <header class="hud">
+        <div class="aff" id="aff" aria-label="好感度">
+          <svg class="aff-heart" viewBox="0 0 32 30" aria-hidden="true">
+            <defs><clipPath id="aff-clip"><rect id="aff-fill-rect" x="0" y="30" width="32" height="30"/></clipPath></defs>
+            <use href="#i-heart" class="h-bg"/>
+            <use href="#i-heart" class="h-fill" clip-path="url(#aff-clip)"/>
+          </svg>
+          <div class="aff-body">
+            <div class="aff-top"><b id="aff-level">知り合い</b><span id="aff-lv-no">Lv.1</span></div>
+            <div class="gauge"><i id="aff-gauge"></i></div>
+            <div class="aff-next" id="aff-next"></div>
+          </div>
+        </div>
+        <div class="hud-r">
+          <div class="pill coin-pill"><svg class="coin"><use href="#i-coin"/></svg><b id="hud-coins">0</b></div>
+          <div class="pill"><span class="pk">学習Lv</span><b id="hud-lv">1</b></div>
+          <div class="pill streak-pill"><svg class="flame"><use href="#i-flame"/></svg><b id="hud-streak">0</b><span class="pk">日</span></div>
+        </div>
+      </header>
+      <div class="stage-tag" id="stage-tag" aria-label="衣装段階">
+        <div class="pips" id="pips"></div>
+        <div class="stage-next" id="next-label"></div>
+      </div>
+      <div class="talk-hint" id="talk-hint">タップで話しかける</div>
+      <div id="home-win" class="msgwin">
+        <span class="plate" id="home-name">ミサキ</span>
+        <p class="msg" id="home-msg"></p>
+        <span class="msg-meta" id="talk-left"></span>
+      </div>
+      <nav class="menubar" aria-label="メニュー">
+        <button type="button" class="mb" id="m-talk"><svg><use href="#i-talk"/></svg><span>おはなし</span><i class="badge hidden" id="b-talk"></i></button>
+        <button type="button" class="mb" id="m-album"><svg><use href="#i-album"/></svg><span>アルバム</span></button>
+        <button type="button" class="mb mb-main" id="m-study"><svg><use href="#i-book"/></svg><span>勉強する</span></button>
+        <button type="button" class="mb" id="m-mission"><svg><use href="#i-flag"/></svg><span>ミッション</span><i class="badge hidden" id="b-mission"></i></button>
+        <button type="button" class="mb" id="m-settings"><svg><use href="#i-gear"/></svg><span>設定</span></button>
+      </nav>
+    </section>
+
+    <!-- ===== 勉強デート（クイズ） ===== -->
+    <section id="quiz" class="screen hidden" aria-label="勉強デート">
+      <div class="qpanel" id="qpanel">
+        <div class="qhud">
+          <span id="q-count" class="num"></span>
+          <div class="timebar"><div id="timebar-fill"></div></div>
+          <span id="q-time" class="num time"></span>
+        </div>
+        <div class="qsub"><span id="q-score"></span><span id="focus-warn" class="warn hidden">よそ見 −5秒</span></div>
+        <h2 id="q-text" class="question"></h2>
+        <div id="choices" class="choices"></div>
+        <button class="textbtn" id="btn-quit" type="button">中断してホームへ</button>
+      </div>
+    </section>
+
+    <!-- ===== 結果 ===== -->
+    <section id="result" class="screen hidden" aria-label="結果">
+      <div class="rpanel" id="rpanel">
+        <div class="result-head">
+          <div class="rank" id="r-rank" aria-live="polite"></div>
+          <div class="result-title">
+            <h2 id="r-title"></h2>
+            <p class="score-big num" id="r-score"></p>
+            <p id="r-detail" class="r-detail"></p>
+          </div>
+        </div>
+        <div class="rewards" id="r-rewards"></div>
+        <div class="flip" id="r-wrong"></div>
+        <div class="rbtns">
+          <button class="btn" id="btn-home" type="button">ホームへ</button>
+          <button class="btn primary" id="btn-again" type="button">もう一回</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 会話イベント（ビジュアルノベル） ===== -->
+    <section id="ep" class="screen hidden" aria-label="会話イベント">
+      <header class="ep-bar">
+        <div class="ep-title" id="ep-title"></div>
+        <button type="button" class="chip" id="ep-auto" aria-pressed="false">AUTO</button>
+        <button type="button" class="chip" id="ep-skip">SKIP</button>
+        <button type="button" class="chip icon" id="ep-close" aria-label="閉じる"><svg><use href="#i-close"/></svg></button>
+      </header>
+      <div class="ep-choices hidden" id="ep-choices"></div>
+      <div class="msgwin ep-win" id="ep-win">
+        <span class="plate" id="ep-name"></span>
+        <p class="msg" id="ep-msg"></p>
+        <span class="next-mark" aria-hidden="true"></span>
+      </div>
+    </section>
+
+    <!-- ===== シート（パネル） ===== -->
+    <div id="sheet-wrap" class="sheet-wrap hidden">
+      <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+        <header class="sheet-head">
+          <h2 id="sheet-title"></h2>
+          <button type="button" class="iconbtn" id="sheet-close" aria-label="閉じる"><svg><use href="#i-close"/></svg></button>
+        </header>
+        <nav class="tabs" id="sheet-tabs"></nav>
+        <div class="sheet-body" id="sheet-body"></div>
+        <footer class="sheet-foot" id="sheet-foot"></footer>
+      </div>
+    </div>
+
+    <!-- 設定フォーム（シートに差し込む。各タブは1画面に収まる項目数） -->
+    <div id="settings-src" class="hidden">
+      <div class="tabpage" data-tab="study">
+        <label class="field">科目 <select id="s-subject"></select></label>
+        <div class="field-row">
+          <label class="field">問題数 <select id="s-count"><option>5</option><option>10</option><option>15</option></select></label>
+          <label class="field">制限時間（秒） <input id="s-time" type="number" min="15" max="600" step="5" inputmode="numeric"></label>
+          <label class="field">合格ライン（%） <input id="s-pass" type="number" min="10" max="100" step="5" inputmode="numeric"></label>
+        </div>
+        <label class="check"><input type="checkbox" id="s-penalty"> 不合格なら衣装を1段階戻す</label>
+        <label class="check"><input type="checkbox" id="s-focus"> よそ見（タブ移動・アプリ切替）で−5秒</label>
+        <button type="button" class="btn" id="btn-custom">自作問題を編集</button>
+      </div>
+      <div class="tabpage" data-tab="chara">
+        <div class="pager-page" data-page="0">
+          <div class="field-row">
+            <label class="field">名前 <input id="c-name" maxlength="12"></label>
+            <label class="field">年齢（20歳以上） <input id="c-age" type="number" min="20" max="60" inputmode="numeric"></label>
+          </div>
+          <label class="field">性格
+            <select id="c-personality">
+              <option value="gentle">やさしいお姉さん</option>
+              <option value="tsundere">ツンデレ</option>
+              <option value="cool">クール</option>
+              <option value="genki">元気</option>
+            </select>
+          </label>
+          <p class="note">性格で、セリフと会話イベントの言い回しが変わります。</p>
+          <label class="field">キャラ表示
+            <select id="v-view"><option value="2d">2D（イラスト）</option><option value="3d">3D（動く3Dモデル）</option></select>
+          </label>
+          <p class="note">3D は対応端末のみ。読み込めないときは自動で 2D になります。</p>
+        </div>
+        <div class="pager-page" data-page="1">
+          <p class="note">以下は立ち絵画像が無いとき（イラストの代替表示）だけ有効です。</p>
+          <div class="field-row">
+            <label class="field">髪型
+              <select id="c-hairStyle"><option value="long">ロング</option><option value="bob">ボブ</option><option value="ponytail">ポニーテール</option></select>
+            </label>
+            <label class="check"><input type="checkbox" id="c-glasses"> メガネ</label>
+          </div>
+          <div class="swatch-wrap">
+            <div class="swatches">
+              <label>髪 <input type="color" id="c-hair"></label>
+              <label>瞳 <input type="color" id="c-eye"></label>
+              <label>肌 <input type="color" id="c-skin"></label>
+              <label>アクセント <input type="color" id="c-accent"></label>
+              <label>スカート <input type="color" id="c-accent2"></label>
+              <label>ブレザー <input type="color" id="c-blazer"></label>
+              <label>コート <input type="color" id="c-coat"></label>
+              <label>ベレー帽 <input type="color" id="c-beret"></label>
+              <label>水着 <input type="color" id="c-swim"></label>
+            </div>
+            <svg id="c-preview" class="c-preview" viewBox="0 0 300 600" aria-label="プレビュー"></svg>
+          </div>
+        </div>
+      </div>
+      <div class="tabpage" data-tab="sound">
+        <div class="vol"><label class="check"><input type="checkbox" id="a-bgmOn"> BGM</label><input type="range" id="a-bgm" min="0" max="100" aria-label="BGMの音量"></div>
+        <div class="vol"><label class="check"><input type="checkbox" id="a-voiceOn"> 音声</label><input type="range" id="a-voice" min="0" max="100" aria-label="音声の音量"></div>
+        <div class="vol"><label class="check"><input type="checkbox" id="a-sfxOn"> 効果音</label><input type="range" id="a-sfx" min="0" max="100" aria-label="効果音の音量"></div>
+        <label class="check"><input type="checkbox" id="fx-haptic"> 振動（iPhone）</label>
+      </div>
+      <div class="tabpage" data-tab="other">
+        <button type="button" class="btn rowbtn" id="btn-credits">クレジット<span>音声・素材の提供元</span></button>
+        <button type="button" class="btn rowbtn" id="btn-defaults">設定を初期値に戻す<span>学習設定とキャラ設定</span></button>
+        <button type="button" class="btn rowbtn" id="btn-reset-stage">衣装を最初に戻す<span>好感度やコインはそのまま</span></button>
+        <button type="button" class="btn rowbtn danger" id="btn-reset-all">データをすべて消す<span>進行・記録・アルバムを初期化</span></button>
+      </div>
+    </div>
+
+    <!-- フルスクリーン演出（レベルアップ／ログボ／衣装チェンジなど） -->
+    <div id="fs" class="fs hidden" role="dialog" aria-modal="true"></div>
+
+    <!-- 汎用ダイアログ -->
+    <div id="dialog" class="overlay hidden" role="dialog" aria-modal="true">
+      <div class="window" id="dialog-win"></div>
+    </div>
+
+    <!-- 画面切り替えの暗転・ワイプ -->
+    <div id="wipe" class="wipe" aria-hidden="true"></div>
+    <div id="toast" class="toast hidden" role="status"></div>
+  </div>
+
+  <script src="character.js"></script>
+  <script src="questions.js"></script>
+  <script src="script.js"></script>
+  <script src="sfx.js"></script>
+  <script src="bgm.js" onerror="this.remove()"></script>
+  <script src="assets/voice/manifest.js" onerror="this.remove()"></script>
+  <script src="voice.js" onerror="this.remove()"></script>
+  <script src="fx.js"></script>
+  <script src="character_vrm.js" onerror="this.remove()"></script>
+  <script src="app.js"></script>
+</body>
+</html>

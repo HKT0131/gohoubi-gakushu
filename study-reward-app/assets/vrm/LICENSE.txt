@@ -1,0 +1,33 @@
+chara.vrm — 3D 表示用キャラクターモデル（改変版）
+
+■ 出典
+  VRoid β Ver AvatarSample_4（ヴィクトリア・ルービン / Victoria Rubin）
+  著作者: pixiv Inc. VRoidプロジェクト
+  公式の利用条件: https://vroid.pixiv.help/hc/ja/articles/360014900233
+                  https://vroid.pixiv.help/hc/ja/articles/4402614652569 （旧ベータ版サンプルモデルの利用条件。CC0 のモデルとして掲載）
+  VRoid Hub:      https://hub.vroid.com/characters/2792872861023597723/models/5013769147837660446
+  入手元ファイル:  https://opengameart.org/content/vroid-studio-cc0-models （avatarsample_g.zip / AvatarSample_G.vrm）
+                  ※ VRoid Hub 上のファイルサイズ（15,321,932 bytes）と一致することを確認。
+                  SHA-256 ad5750ce944b708155abb7ac6807e19d7f5e73a939f0ee32daf0539acfca57c0（tools/vrm/src/ に原本）
+
+■ ライセンス
+  CC0 1.0（著作権放棄）https://creativecommons.org/publicdomain/zero/1.0/
+  "To the extent possible under law, pixiv Inc. has waived all copyright and related or neighboring rights to Victoria Rubin."
+  VRM meta / VRoid Hub の利用条件（2026-10-10 確認）:
+    アバター利用: 全員 / 人格の付与（キャラクター化）: 全員 / 暴力表現: 許可 / 性的表現: 許可
+    法人の商用利用: 許可 / 個人の商用利用: 許可（営利） / 改変: 許可 / 再配布: 許可 / クレジット表記: 不要
+  公式の注意書き: 「特に利用条件は設けていませんが、提供の主旨をご理解頂き、良識ある利用をお願いいたします。」
+
+■ 改変内容（tools/vrm/build_vrm.mjs）
+  - 体テクスチャに三角ビキニ（トップ＋ボトム、水玉柄）を焼き込み、元の体テクスチャは同梱しない。焼き込み後にテクスチャ上と実レンダリングの両方で被覆を自動検査（tools/vrm/verify_render.mjs）。
+  - ニーハイを肌色にした体テクスチャ（ビキニ入り）を追加。
+  - 服を 袖 / ブラウス / スカート / 飾り紐 のマテリアルに分割（衣装段階の表示切り替え用）。
+  - 胸の揺れもの（SpringBone "Bust"）を削除。テクスチャの圧縮・縮小。meta のタイトルに改変版の旨を追記。
+  - 水着の範囲マスク（実行時の色替え用）を追加。下着が描かれていた部分の外側は肌色で塗り直し。
+  - 体の肌の色合わせ（胴・腕を顔・首の色へ）と、UV の継ぎ目のにじみ止め。
+  - アプリ実行時に、ベレー帽・マフラー、ビキニのリボンを three.js で追加（character_vrm.js）。
+  キャラクターの名前・プロフィールはアプリ側の設定（既定: ミサキ、25歳）を使い、元モデルのプロフィールは使わない。
+  ピクシブ株式会社がこのアプリを支援・推奨しているものではありません。
+
+■ ライブラリ（assets/lib/）
+  three.js r169（MIT）、@pixiv/three-vrm 3.5.5（MIT）。全文は assets/lib/LICENSE-three.txt / LICENSE-three-vrm.txt。

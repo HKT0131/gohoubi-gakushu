@@ -1,0 +1,12 @@
+{
+ "name": "room_morning",
+ "seed": 202,
+ "prompt": "small one-room apartment of a working adult in Japan, tidy, wooden desk with laptop and notebooks, bookshelf with business books, potted plant, coffee mug, white curtains, bright morning sunlight through window, light blue sky, fresh atmosphere, no humans, scenery, indoors, vertical composition, eye level, soft focus, depth of field, anime background art, warm off-white and indigo color palette, subtle vermilion accents, detailed background, newest, masterpiece, high score, great score, absurdres",
+ "negative": "1girl, 1boy, people, person, character, humanoid, text, watermark, signature, logo, lowres, blurry foreground objects, distorted perspective, fisheye, worst quality, low quality, low score, bad score, average score, bed sheets mess, stuffed toy, school desk, randoseru, nsfw",
+ "size": [
+  768,
+  1344
+ ],
+ "hires": 1.5,
+ "hires_strength": 0.4
+}

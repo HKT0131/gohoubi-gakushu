@@ -1,0 +1,8 @@
+{
+ "name": "room_night",
+ "seed": 241,
+ "src": "out/bg/m_night.png",
+ "strength": 0.62,
+ "prompt": "same small one-room apartment of a working adult at night, night, desk lamp on, warm lamp light, laptop screen glow, dark blue night sky and city lights outside window, curtains half open, quiet cozy atmosphere, no humans, scenery, indoors, vertical composition, eye level, soft focus, depth of field, anime background art, warm off-white and indigo color palette, subtle vermilion accents, detailed background, newest, masterpiece, high score, great score, absurdres",
+ "negative": "1girl, 1boy, people, person, character, humanoid, text, watermark, signature, logo, lowres, blurry foreground objects, distorted perspective, fisheye, worst quality, low quality, low score, bad score, average score, bed sheets mess, stuffed toy, school desk, randoseru, nsfw"
+}
